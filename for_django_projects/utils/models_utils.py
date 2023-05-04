@@ -61,7 +61,7 @@ class FileNameUploadToPath(object):
         filename = force_str(filename)
         filename = unicodedata.normalize('NFKD', filename).encode('ascii', 'ignore').decode('ascii')
         extension = os.path.splitext(filename)[1][1:]
-        from utils.funciones_adicionales import customgetattr
+        from for_django_projects.utils.funciones_adicionales import customgetattr
         concatenar = ""
         for x in self.campos_concatenar:
             concatenar += str(customgetattr(instance, x) or "") + " "

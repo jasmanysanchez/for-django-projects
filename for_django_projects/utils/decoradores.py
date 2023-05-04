@@ -4,12 +4,11 @@ from django.db import transaction, IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.conf import settings
-from utils.funciones import redirectAfterPostGet
+from for_django_projects.utils.funciones import redirectAfterPostGet
 
 
 def custom_atomic_request(func):
-    from utils.custom_models import FormError
-    from utils.funciones_adicionales import salva_logs_request
+    from for_django_projects.utils.custom_models import FormError
     import sys
     def validate_request(*args, **kwargs):
         res_json = []
@@ -48,9 +47,6 @@ def custom_atomic_request(func):
                 )
                 val_func = JsonResponse(res_json, safe=False)
             except Exception as ex:
-                salva_logs_request(request, __file__, request.method,
-                                   action, type(ex).__name__,
-                                   'Error on line {}'.format(sys.exc_info()[-1].tb_lineno), ex)
                 res_json.append({'error': True,
                                  "message": "Intente Nuevamente"
                                  })

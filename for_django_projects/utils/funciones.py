@@ -129,7 +129,7 @@ def campoSinFiltro(c):
 def criterioBusquedaDinamico(criterio: str, campos: list, isPostgres=True):
     '''Si el modelo no proviene de una base de datos postgres set isPostgres=False'''
     from django.db.models import Q
-    from utils.funciones_adicionales import remover_espacios_de_mas
+    from for_django_projects.utils.funciones_adicionales import remover_espacios_de_mas
     filtros = Q()
     criterio_list = remover_espacios_de_mas(criterio).split("+")
     # for c in campos:

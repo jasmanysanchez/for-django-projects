@@ -10,8 +10,8 @@ from django.utils.safestring import mark_safe
 from django_select2.forms import ModelSelect2Widget, Select2Widget, Select2MultipleWidget, ModelSelect2MultipleWidget
 
 from django.conf import settings
-from form_utils.forms import BetterModelForm, BetterForm
-from utils.funciones_adicionales import customgetattr
+from for_django_projects.form_utils.forms import BetterModelForm, BetterForm
+from for_django_projects.utils.funciones_adicionales import customgetattr
 
 
 class CustomValueDb(Value):
@@ -171,7 +171,7 @@ class ModeloBase(NormalModel):
         abstract = True
 
 def filter_queryset(self, request, term, queryset=None, **dependent_fields):
-    from django.db.models import Q;import django;from utils.funciones import criterioBusquedaDinamico
+    from django.db.models import Q;import django;from for_django_projects.utils.funciones import criterioBusquedaDinamico
     if django.VERSION < (4, 0):
         from django.contrib.admin.utils import (
             lookup_needs_distinct as lookup_spawns_duplicates,
