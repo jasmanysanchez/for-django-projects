@@ -8,7 +8,7 @@ setuptools.setup(
     version="1.0.0",
     author="Jasmany Sanchez Mendez",
     author_email="jasmanysanchez97@gmail.com",
-    description="Paquete con librerías para proyectos de Django",
+    description="Package of libraries for Django projects",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/jasmanysanchez/for-django-projects",
