@@ -18,7 +18,7 @@ INSTALLED_APPS = [
 ]
 ```
 
-Add apps in settings.py:
+Add in settings.py:
 
 ```sh
 SIMBOLO_MONEDA = '$'
