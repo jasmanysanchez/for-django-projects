@@ -27,10 +27,10 @@ CONSTRAINT_MSG = {} #dict of name of constraints as key and error message as val
 ```
 
 # Classes
-#### CustomValueDb
+#### _CustomValueDb_
 Inherited from `django.db.models.Value`, automatically adds data type in output_field attribute.
 
-#### NormalModel
+#### _NormalModel_
 Inherited from `django.db.models.Model`, adds fields **(in all models inheriting from NormalModel)** according to the field type.
 Example: If there is a field of type BooleanField with the name `is_enabled`, then the `is_enabled_boolhtml` attribute will be added with a [Fontawesome](https://fontawesome.com/search?m=free) icon named **fa-check-circle**, otherwise **fa-times-circle** is added.
 ######
