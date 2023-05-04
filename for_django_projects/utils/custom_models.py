@@ -87,6 +87,7 @@ def build_json_data(self) -> str:
 class NormalModel(models.Model):
 
     def __init__(self, *args, **kwargs):
+        SIMBOLO_MONEDA = getattr(settings, 'SIMBOLO_MONEDA', '$')
         from dateutil.tz import tz
         super().__init__(*args, **kwargs)
         for x in self._meta.fields:
@@ -106,7 +107,7 @@ class NormalModel(models.Model):
                 t = customgetattr(self, f)
                 if t != None:
                     setattr(self, '%s_unlocalize' % f, str(t).replace(',', '.'))
-                    setattr(self, '%s_money' % f, "{}{}".format(settings.SIMBOLO_MONEDA, str(t).replace(',', '.')))
+                    setattr(self, '%s_money' % f, "{}{}".format(SIMBOLO_MONEDA, str(t).replace(',', '.')))
                     t = int(float(customgetattr(self, f)))
                     setattr(self, '%s_integer' % f, t)
             if isinstance(self._meta.get_field(f), models.DateTimeField):
@@ -147,7 +148,7 @@ class NormalModel(models.Model):
                         "archivo_is_image": is_image,
                         "archivo_extension": extension,
                         "icono": mark_safe(archivo_icon),
-                        "URL_GENERAL": settings.URL_GENERAL,
+                        "URL_GENERAL": getattr(settings, 'URL_GENERAL', ''),
                     }))
 
     def build_dict_data(self) -> dict:

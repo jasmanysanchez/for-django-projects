@@ -36,9 +36,9 @@ def custom_atomic_request(func):
                 has_except = True
                 msg = str(ex)
                 error_message = "Integrity Error"
-                for key in settings.CONSTRAINT_MSG_KEYS:
+                for key in getattr(settings, 'CONSTRAINT_MSG_KEYS', []):
                     if re.search(f"\\b{key}\\b", msg):
-                        error_message = settings.CONSTRAINT_MSG[key]
+                        error_message = getattr(settings, 'CONSTRAINT_MSG', {}).get(key) or 'Integrity Error'
                 res_json.append(
                     {
                         'error': has_except,
