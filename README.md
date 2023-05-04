@@ -18,6 +18,14 @@ INSTALLED_APPS = [
 ]
 ```
 
+Add apps in settings.py:
+
+```sh
+SIMBOLO_MONEDA = '$'
+URL_GENERAL = 'http://your_domain.com'
+CONSTRAINT_MSG = {} #dict of name of constraints as key and error message as value  
+```
+
 ## License
 
 MIT
