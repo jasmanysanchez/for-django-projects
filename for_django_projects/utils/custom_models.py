@@ -8,11 +8,13 @@ from django.template.loader import render_to_string
 from django.utils.html import strip_tags
 from django.utils.safestring import mark_safe
 from django_select2.forms import ModelSelect2Widget, Select2Widget, Select2MultipleWidget, ModelSelect2MultipleWidget
-
+from pathlib import Path
+import os
 from django.conf import settings
 from for_django_projects.form_utils.forms import BetterModelForm, BetterForm
 from for_django_projects.utils.funciones_adicionales import customgetattr
 
+TEMPLATES_PATH = os.path.join(Path(__file__).resolve().parent.parent, 'templates')
 
 class CustomValueDb(Value):
     def __init__(self, value, output_field=None):
@@ -41,7 +43,7 @@ def create_function_fancybox(name, **kwargs):
         kwargs["nombre_btn"] = nombreBtn if nombreBtn else "Ver archivo"
         kwargs["groupName"] = groupName
         kwargs["caption"] = caption
-        return mark_safe(render_to_string('fancybox_modelfile.html', kwargs))
+        return mark_safe(render_to_string(os.path.join(TEMPLATES_PATH, 'fancybox_modelfile.html'), kwargs))
     y.__name__ = name
     return y
 
