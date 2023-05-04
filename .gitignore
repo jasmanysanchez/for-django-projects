@@ -1,0 +1,39 @@
+media/
+*.pyc
+.idea/
+.idea/**
+.vscode/
+.venv/
+venv/
+env/
+**/migrations/**
+/vapid.json
+/credenciales.json
+pruebas.py
+pruebas2.py
+!**/migrations
+!**/migrations/__init__.py
+/.idea
+/.idea/**
+.ipynb_checkpoints/
+workspace.xml
+exepcion_send.text
+*#
+*/__pychache__/
+.history/*
+/private_key_enc.pem
+/public_key_enc.pem
+/api_google_key.json
+/media/
+/media/**
+!/media/foto_defaultd.png
+!/media/loadmail.gif
+!/media/no-image.webp
+#eliminar archivos de github pero conservar en local
+#git rm --cached archivo.ext
+#git rm --cached -r carpeta
+# Project exclude paths
+#/static/panel/plugins/chart.js/auto/auto.js
+#/static/panel/plugins/chart.js/auto/auto.mjs
+#/static/panel/plugins/chart.js/helpers/helpers.js
+#/static/panel/plugins/chart.js/helpers/helpers.mjs
