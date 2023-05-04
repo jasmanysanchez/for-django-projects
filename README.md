@@ -12,8 +12,8 @@ Add apps in INSTALLED_APPS:
 ```sh
 INSTALLED_APPS = [
     ...
-    'form_utils',
-    'pwa'
+    'for_django_projects.form_utils',
+    'for_django_projects.pwa'
     ...
 ]
 ```
