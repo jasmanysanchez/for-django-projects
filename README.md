@@ -33,7 +33,32 @@ Inherited from `django.db.models.Value`, automatically adds data type in output_
 #### _NormalModel_
 Inherited from `django.db.models.Model`, adds fields **(in all models inheriting from NormalModel)** according to the field type.
 Example: If there is a field of type BooleanField with the name `is_enabled`, then the `is_enabled_boolhtml` attribute will be added with a [Fontawesome](https://fontawesome.com/search?m=free) icon named **fa-check-circle**, otherwise **fa-times-circle** is added.
-######
+### Attributes to be added in objects inherited from _NormalModel_ according to field type:
+#### django.db.models.BooleanField:
+- `fieldname_boolhtml` ➝ [SafeString](https://docs.djangoproject.com/es/2.2/_modules/django/utils/safestring/#mark_safe): Return `<i class="fas fas fa-clock text-info"></i>` if `fieldname` value is `None`, `<i class="fas fa-check-circle text-success"></i>` if is `True` or `<i class="fas fa-times-circle text-secondary"></i>` if is `False`.
+<br><br>
+- `fieldname_texthtml ➝ str`: Return `HABILITADO` if `fieldname` value is `True`, else return `DESHABILITADO`.
+<br><br>
+- `fieldname_yesorno ➝ str`: Return `Sí` if `fieldname` value is `True`, else return `No`.
+
+#### django.db.models.DecimalField:
+- `fieldname_unlocalize ➝ str`: Returns the same value but replacing the comma `,` character with dot `.`.
+<br><br>
+- `fieldname_money ➝ str`: Return `fieldname_unlocalize` with `settings.SIMBOLO_MONEDA`, example `$10.50`.
+<br><br>
+- `fieldname_integer ➝ int`: Return the `fieldname` value rounded.
+
+#### django.db.models.FileField:
+- `fieldname_icon` ➝ [SafeString](https://docs.djangoproject.com/es/2.2/_modules/django/utils/safestring/#mark_safe): Returns [Fontawesome](https://fontawesome.com/search?m=free) icon according to file extension.
+<br><br>
+- `fieldname_a_tag` ➝ [SafeString](https://docs.djangoproject.com/es/2.2/_modules/django/utils/safestring/#mark_safe): Returns `<a target="_blank" href="URL">{fieldname_icon} descargar</a>`.
+<br><br>
+- `fieldname_is_image ➝ bool`.
+<br><br>
+- `fieldname_extension ➝ str`.
+
+#### _ModeloBase_
+Inherited from `NormalModel`, add new fields in model as `fecha_registro -> models.DateTimeField` and `sin_eliminar -> models.BooleanField`.
 
 ## License
 
