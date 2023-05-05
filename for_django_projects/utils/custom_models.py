@@ -1,3 +1,5 @@
+import re
+
 from django import forms
 from django.contrib.postgres.fields import ArrayField
 from django.core.validators import FileExtensionValidator
@@ -232,6 +234,7 @@ class MySelect2MultipleWidget(ModelSelect2MultipleWidget):
 class FormError(Exception):
     def __init__(self, form, prefix="", sufix=""):
         super().__init__("Error en el formulario")
+        alerta = ""
         if isinstance(form, list) or isinstance(form, tuple):
             self.errors = []
             for x in form:
@@ -239,10 +242,15 @@ class FormError(Exception):
                     self.errors.append({prefix+k+sufix: v[0]})
         else:
             self.errors = [{prefix+k+sufix: v[0]} for k, v in form.errors.items()]
+        for x in form.errors.get('__all__') or []:
+            for key in getattr(settings, 'CONSTRAINT_MSG', {}).keys():
+                if re.search(f"\\b{key}\\b", x):
+                    alerta += f'<div>{getattr(settings, "CONSTRAINT_MSG", {})[key]}</div>'
         self.dict_error = {
             'error': True,
             "form": self.errors,
-            "message": "Datos incorrectos, revise la información registrada."
+            "message": "Datos incorrectos, revise la información registrada.",
+            "alerta": mark_safe(alerta)
         }
 
 
