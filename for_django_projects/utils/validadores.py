@@ -1,8 +1,3 @@
-from django.core.files.images import get_image_dimensions
-from django.core.exceptions import ValidationError
-
-#para el modelo financiero.models.Constante
-
 from django.core.exceptions import ValidationError
 from django.utils.deconstruct import deconstructible
 

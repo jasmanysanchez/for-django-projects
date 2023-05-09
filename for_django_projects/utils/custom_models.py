@@ -231,7 +231,7 @@ class MySelect2MultipleWidget(ModelSelect2MultipleWidget):
     def filter_queryset(self, request, term, queryset=None, **dependent_fields):
         return filter_queryset(self, request, term, queryset, **dependent_fields)
 
-class FormError(Exception):
+class FormException(Exception):
     def __init__(self, form, prefix="", sufix=""):
         super().__init__("Error en el formulario")
         alerta = ""

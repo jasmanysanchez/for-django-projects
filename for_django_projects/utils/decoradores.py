@@ -8,7 +8,7 @@ from for_django_projects.utils.funciones import redirectAfterPostGet
 
 
 def custom_atomic_request(func):
-    from for_django_projects.utils.custom_models import FormError
+    from for_django_projects.utils.custom_models import FormException
     import sys
     def validate_request(*args, **kwargs):
         res_json = []
@@ -27,7 +27,7 @@ def custom_atomic_request(func):
                 val_func = JsonResponse(res_json, safe=False)
                 has_except = True
                 error_message = str(ex)
-            except FormError as ex:
+            except FormException as ex:
                 res_json.append(ex.dict_error)
                 val_func = JsonResponse(res_json, safe=False)
                 has_except = True

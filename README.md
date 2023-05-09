@@ -60,6 +60,24 @@ Example: If there is a field of type BooleanField with the name `is_enabled`, th
 #### _ModeloBase_
 Inherited from `NormalModel`, add new fields in model as `fecha_registro -> models.DateTimeField` and `sin_eliminar -> models.BooleanField`.
 
+#### _FormException_
+Custom exception that is used to handle errors in forms in a Django application.
+
+The class constructor accepts three parameters: `form`, `prefix`, and `suffix`. form can be a Django form object or a list/tuple of Django form objects. prefix and suffix are used to add a prefix and suffix respectively to the form field names in case a specific field needs to be identified that has generated an error.
+
+In the constructor, the superclass `Exception` constructor is called to initialize the error message. Then, a check is performed to determine whether form is a list/tuple or a single Django form object.
+
+If form is a list/tuple, each form object is looped over and information about the errors for each field is collected and added to a list called self.errors.
+
+If form is a single Django form object, information about the field errors is collected and added to the self.errors list. In both cases, the provided prefix and suffix are used to identify the specific field that has generated the error.
+
+Then, a dictionary self.dict_error is created that contains information about the form error. This dictionary has the following keys:
+
+- `error`: a boolean value indicating whether there has been an error in the form.
+- `form`: a list of dictionaries containing information about the form field errors. Each dictionary has two keys: the field name and an error message.
+- `message`: a general error message that is displayed in case a specific field that has generated an error cannot be identified.
+- `alerta`: an HTML text string containing custom alert messages. These messages are displayed in case specific errors that are defined in a dictionary called `settings.CONSTRAINT_MSG` in the Django application configurations are detected.
+
 ## License
 
 MIT
