@@ -63,16 +63,6 @@ def custom_atomic_request(func):
     return validate_request
 
 
-def public_login_required(func):
-    def f(*args, **kwargs):
-        request = args[0]
-        if not request.user.is_authenticated:
-            return redirect("/login/")
-        return func(*args, **kwargs)
-
-    return f
-
-
 def sync_to_async_function(f):
     import threading
     def threading_func(*a, **kw):

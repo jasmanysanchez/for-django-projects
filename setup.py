@@ -5,7 +5,7 @@ with open("README.md", "r", encoding='utf-8') as fh:
 
 setuptools.setup(
     name="for-django-projects",
-    version="1.0.6",
+    version="1.1.0",
     author="Jasmany Sanchez Mendez",
     author_email="jasmanysanchez97@gmail.com",
     description="Package of libraries for Django projects",
@@ -21,10 +21,5 @@ setuptools.setup(
     python_requires='>=3.6',
     install_requires=[
         'Django>=2.2',
-        'django-select2>=7.7.1',
-        'numpy>=1.24.3',
-        'pandas>=2.0.1',
-        'python-dateutil>=2.8.2',
-        'xlwt>=1.3.0',
     ],
 )
