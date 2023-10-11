@@ -2,4 +2,4 @@ from django.apps import AppConfig
 
 
 class PwaConfig(AppConfig):
-    name = 'pwa'
+    name = 'for_django_projects.pwa'

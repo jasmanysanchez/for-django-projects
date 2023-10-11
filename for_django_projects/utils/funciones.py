@@ -37,3 +37,8 @@ def get_decrypt(cyphertxt):
         return True, signing.loads(cyphertxt)
     except Exception as ex:
         return False, str(ex)
+
+
+def remover_espacios_de_mas(valor: str) -> str:
+    import re
+    return re.sub("\s+", " ", (valor or "").strip())
