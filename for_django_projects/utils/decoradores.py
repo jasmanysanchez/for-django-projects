@@ -39,6 +39,8 @@ def custom_atomic_request(func):
                 for key in getattr(settings, 'CONSTRAINT_MSG', {}).keys():
                     if re.search(f"\\b{key}\\b", msg):
                         error_message = getattr(settings, 'CONSTRAINT_MSG', {}).get(key) or 'Integrity Error'
+                if request.user.is_superuser:
+                    error_message = f"{error_message} | {msg}"
                 res_json.append(
                     {
                         'error': has_except,
@@ -53,6 +55,8 @@ def custom_atomic_request(func):
                 val_func = JsonResponse(res_json, safe=False)
                 has_except = True
                 error_message = "Intente Nuevamente"
+                if request.user.is_superuser:
+                    error_message = f"{error_message} | {ex}"
         elif request.method == "GET":
             val_func = func(*args, **kwargs)
         if has_except and not request.is_ajax:
@@ -103,6 +107,8 @@ def validate_atomic_request(func):
                 for key in getattr(settings, 'CONSTRAINT_MSG', {}).keys():
                     if re.search(f"\\b{key}\\b", msg):
                         error_message = getattr(settings, 'CONSTRAINT_MSG', {}).get(key) or 'Integrity Error'
+                if request.user.is_superuser:
+                    error_message = f"{error_message} | {msg}"
                 res_json = {
                     "message": error_message
                 }
