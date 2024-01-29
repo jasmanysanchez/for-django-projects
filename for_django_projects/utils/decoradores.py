@@ -71,3 +71,56 @@ def sync_to_async_function(f):
         # t.join()
 
     return threading_func
+
+
+def validate_atomic_request(func):
+    from for_django_projects.utils.custom_models import FormException
+    import sys
+    def validate_request(*args, **kwargs):
+        res_json = {}
+        request = args[0]
+        has_except = False
+        error_message = ""
+        if request.method == "POST":
+            action = request.POST.get("action")
+            try:
+                with transaction.atomic():
+                    val_func = func(*args, **kwargs)
+            except ValueError as ex:
+                res_json = {"message": str(ex)}
+                val_func = JsonResponse(res_json, status=202)
+                has_except = True
+                error_message = str(ex)
+            except FormException as ex:
+                res_json = ex.dict_error
+                val_func = JsonResponse(res_json, status=202)
+                has_except = True
+                error_message = "Formulario no válido"
+            except IntegrityError as ex:
+                has_except = True
+                msg = str(ex)
+                error_message = "Integrity Error"
+                for key in getattr(settings, 'CONSTRAINT_MSG', {}).keys():
+                    if re.search(f"\\b{key}\\b", msg):
+                        error_message = getattr(settings, 'CONSTRAINT_MSG', {}).get(key) or 'Integrity Error'
+                res_json = {
+                    "message": error_message
+                }
+                val_func = JsonResponse(res_json, status=202)
+            except Exception as ex:
+                error_message = "Intente Nuevamente"
+                if request.user.is_superuser:
+                    error_message = f"{error_message} | {ex}"
+                res_json = {
+                    "message": error_message
+                }
+                val_func = JsonResponse(res_json, status=202)
+                has_except = True
+        elif request.method == "GET":
+            val_func = func(*args, **kwargs)
+        if has_except and not request.is_ajax:
+            messages.error(request, error_message)
+            val_func = redirect(redirectAfterPostGet(request))
+        return val_func
+
+    return validate_request

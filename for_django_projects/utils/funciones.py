@@ -42,3 +42,41 @@ def get_decrypt(cyphertxt):
 def remover_espacios_de_mas(valor: str) -> str:
     import re
     return re.sub("\s+", " ", (valor or "").strip())
+
+
+def formarCondicion(c, busqueda):
+    from django.db.models import Q
+    if c.endswith("__islisttype"):
+        return Q(**{c.replace("__islisttype", ""): [busqueda]})
+    else:
+        return Q(**{c: busqueda})
+def campoSinFiltro(c):
+    filtros = ["__icontains", "__contains", "__startswith", "__istartswith", "__endswith", "__iendswith", "__range", "__search"]
+    for f in filtros:
+        if c.endswith(f):
+            return False
+    return True
+def criterioBusquedaDinamico(criterio: str, campos: list, isPostgres=True):
+    '''Si el modelo no proviene de una base de datos postgres set isPostgres=False'''
+    from django.db.models import Q;from django.utils.text import smart_split
+    filtros = Q()
+    criterio_list = smart_split(remover_espacios_de_mas(criterio))
+    for cl in criterio_list:
+        cri = cl.strip()
+        f = Q()
+        if cri:
+            for c in campos:
+                if campoSinFiltro(c):
+                    if cri.startswith("%") and cri.endswith("%"):
+                        c = c + "__icontains"
+                    elif cri.startswith("%"):
+                        c = c + "__iendswith"
+                    elif cri.endswith("%"):
+                        c = c + "__istartswith"
+                    else:
+                        if isPostgres:
+                            f |= formarCondicion(c + "__search", cri.replace("%", ""))
+                        c = c + "__icontains"
+                f |= formarCondicion(c, cri.replace("%", ""))
+            filtros &= (f)
+    return (filtros)
