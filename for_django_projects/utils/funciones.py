@@ -41,7 +41,7 @@ def get_decrypt(cyphertxt):
 
 def remover_espacios_de_mas(valor: str) -> str:
     import re
-    return re.sub("\s+", " ", (valor or "").strip())
+    return re.sub("[ \t]+", " ", (re.sub("[ \t]+", " ", (valor or "").strip()) or "").strip())
 
 
 def formarCondicion(c, busqueda):
