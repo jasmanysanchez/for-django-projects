@@ -13,7 +13,8 @@ def customgetattr(object, _name):
     obj = object
     for t in tree:
         if hasattr(obj, t):
-            obj = obj(**kwargs) if callable(obj) else getattr(obj, t)
+            obj = getattr(obj, t)
+            obj = obj(**kwargs) if callable(obj) else obj
         else:
             obj = ""
             break
