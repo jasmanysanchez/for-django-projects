@@ -2,6 +2,24 @@ import json
 from django.core import signing
 
 
+def customgetattr(object, _name):
+    name = _name
+    kwargs = {}
+    if "{" in _name:
+        dict_obj = json.loads(_name)
+        name = dict_obj["name"]
+        kwargs = dict_obj.get('kwargs') or {}
+    tree = name.split(".")
+    obj = object
+    for t in tree:
+        if hasattr(obj, t):
+            obj = obj(**kwargs) if callable(obj) else getattr(obj, t)
+        else:
+            obj = ""
+            break
+    return obj
+
+
 def redirectAfterPostGet(request, campos_add={}):
     dict_url_vars = request.GET.get('dict_url_vars') or request.POST.get('dict_url_vars') or ""
     if dict_url_vars:
