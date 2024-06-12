@@ -1,5 +1,6 @@
 import json
 from django.core import signing
+from django.db.models import Q
 
 
 def customgetattr(object, _name):
@@ -64,7 +65,6 @@ def remover_espacios_de_mas(valor: str) -> str:
 
 
 def formarCondicion(c, busqueda):
-    from django.db.models import Q
     if c.endswith("__islisttype"):
         return Q(**{c.replace("__islisttype", ""): [busqueda]})
     else:
@@ -77,25 +77,31 @@ def campoSinFiltro(c):
     return True
 def criterioBusquedaDinamico(criterio: str, campos: list, isPostgres=True):
     '''Si el modelo no proviene de una base de datos postgres set isPostgres=False'''
-    from django.db.models import Q;from django.utils.text import smart_split
+    from django.db.models import Q
+    from django.utils.text import smart_split
     filtros = Q()
-    criterio_list = smart_split(remover_espacios_de_mas(criterio))
-    for cl in criterio_list:
-        cri = cl.strip()
-        f = Q()
-        if cri:
-            for c in campos:
-                if campoSinFiltro(c):
-                    if cri.startswith("%") and cri.endswith("%"):
-                        c = c + "__icontains"
-                    elif cri.startswith("%"):
-                        c = c + "__iendswith"
-                    elif cri.endswith("%"):
-                        c = c + "__istartswith"
-                    else:
-                        if isPostgres:
-                            f |= formarCondicion(c + "__search", cri.replace("%", ""))
-                        c = c + "__icontains"
-                f |= formarCondicion(c, cri.replace("%", ""))
-            filtros &= (f)
+    valor_a_buscar = remover_espacios_de_mas(criterio)
+    or_values = valor_a_buscar.split('|')
+    for ov in or_values:
+        or_filters = Q()
+        criterio_list = smart_split(ov)
+        for cl in criterio_list:
+            cri = cl.strip()
+            f = Q()
+            if cri:
+                for c in campos:
+                    if campoSinFiltro(c):
+                        if cri.startswith("%") and cri.endswith("%"):
+                            c = c + "__icontains"
+                        elif cri.startswith("%"):
+                            c = c + "__iendswith"
+                        elif cri.endswith("%"):
+                            c = c + "__istartswith"
+                        else:
+                            if isPostgres:
+                                f |= formarCondicion(c + "__search", cri.replace("%", ""))
+                            c = c + "__icontains"
+                    f |= formarCondicion(c, cri.replace("%", ""))
+                or_filters &= (f)
+        filtros |= (or_filters)
     return (filtros)
