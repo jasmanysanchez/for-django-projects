@@ -79,12 +79,16 @@ def criterioBusquedaDinamico(criterio: str, campos: list, isPostgres=True):
     '''Si el modelo no proviene de una base de datos postgres set isPostgres=False'''
     from django.db.models import Q
     from django.utils.text import smart_split
+    import re
     filtros = Q()
     valor_a_buscar = remover_espacios_de_mas(criterio)
     or_values = valor_a_buscar.split('|')
     for ov in or_values:
         or_filters = Q()
-        criterio_list = smart_split(ov)
+        icontains_texts = [f'%{x}%' for x in re.findall(r'%([^%]+)%', ov)]
+        for it in icontains_texts:
+            ov = ov.replace(it, '')
+        criterio_list = icontains_texts + list(smart_split(ov))
         for cl in criterio_list:
             cri = cl.strip()
             f = Q()
