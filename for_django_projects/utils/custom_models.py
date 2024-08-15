@@ -46,3 +46,8 @@ class FormException(Exception):
             "message": "Datos incorrectos, revise la información registrada.",
             "alerta": mark_safe(alerta)
         }
+
+
+class SomeValueException(Exception):
+    def __init__(self, error):
+        super().__init__(error)

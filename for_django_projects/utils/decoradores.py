@@ -4,6 +4,8 @@ from django.db import transaction, IntegrityError
 from django.http import JsonResponse
 from django.shortcuts import redirect
 from django.conf import settings
+
+from for_django_projects.utils.custom_models import SomeValueException
 from for_django_projects.utils.funciones import redirectAfterPostGet
 
 
@@ -90,7 +92,7 @@ def validate_atomic_request(func):
             try:
                 with transaction.atomic():
                     val_func = func(*args, **kwargs)
-            except ValueError as ex:
+            except SomeValueException as ex:
                 res_json = {"message": str(ex)}
                 val_func = JsonResponse(res_json, status=202)
                 has_except = True
