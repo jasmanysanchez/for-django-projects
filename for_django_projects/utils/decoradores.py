@@ -47,11 +47,13 @@ def custom_atomic_request(func):
                     error_message = constraing_msgs.get('check_constraint_failed') or "CHECK constraint failed"
                 if request.user.is_superuser:
                     error_message = f"{error_message} | {msg}"
-                res_json = {
-                    'error': has_except,
-                    "message": error_message
-                }
-                val_func = JsonResponse(res_json, status=202)
+                res_json.append(
+                    {
+                        'error': has_except,
+                        "message": error_message
+                    }
+                )
+                val_func = JsonResponse(res_json, safe=False)
             except Exception as ex:
                 res_json.append({'error': True,
                                  "message": "Intente Nuevamente"
@@ -108,12 +110,17 @@ def validate_atomic_request(func):
                 has_except = True
                 msg = str(ex)
                 error_message = "Integrity Error"
-                for key in getattr(settings, 'CONSTRAINT_MSG', {}).keys():
-                    if re.search(f"\\b{key}\\b", msg):
-                        error_message = getattr(settings, 'CONSTRAINT_MSG', {}).get(key) or 'Integrity Error'
+                constraing_msgs = getattr(settings, 'CONSTRAINT_MSG', {})
+                if hasattr(ex, '__cause__') and ex.__cause__ and hasattr(ex.__cause__, 'args') and ex.__cause__.args:
+                    error_message = ex.__cause__.args[0]
+                elif "UNIQUE constraint failed".upper() in msg.upper():
+                    error_message = constraing_msgs.get('unique_constraint_failed') or "UNIQUE constraint failed"
+                elif "CHECK constraint failed" in msg:
+                    error_message = constraing_msgs.get('check_constraint_failed') or "CHECK constraint failed"
                 if request.user.is_superuser:
                     error_message = f"{error_message} | {msg}"
                 res_json = {
+                    'error': has_except,
                     "message": error_message
                 }
                 val_func = JsonResponse(res_json, status=202)
