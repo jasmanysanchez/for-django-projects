@@ -47,13 +47,11 @@ def custom_atomic_request(func):
                     error_message = constraing_msgs.get('check_constraint_failed') or "CHECK constraint failed"
                 if request.user.is_superuser:
                     error_message = f"{error_message} | {msg}"
-                res_json.append(
-                    {
-                        'error': has_except,
-                        "message": error_message
-                    }
-                )
-                val_func = JsonResponse(res_json, safe=False)
+                res_json = {
+                    'error': has_except,
+                    "message": error_message
+                }
+                val_func = JsonResponse(res_json, status=202)
             except Exception as ex:
                 res_json.append({'error': True,
                                  "message": "Intente Nuevamente"
