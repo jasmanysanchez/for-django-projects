@@ -34,8 +34,10 @@ class FormException(Exception):
             for x in form:
                 for k, v in x.errors.items():
                     self.errors.append({prefix+k+sufix: v[0]})
+                    self.errors.append({form[k].html_name: v[0]})
         else:
             self.errors = [{prefix+k+sufix: v[0]} for k, v in form.errors.items()]
+            self.errors = [{form[k].html_name: v[0]} for k, v in form.errors.items()]
         for x in form.errors.get('__all__') or []:
             for key in getattr(settings, 'CONSTRAINT_MSG', {}).keys():
                 if re.search(f"\\b{key}\\b", x):
